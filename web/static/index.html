@@ -1,0 +1,154 @@
+<!doctype html>
+<html lang="zh-CN">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>西夏文 OCR · 夏汉混排识别</title>
+<link rel="icon" href="data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 32 32'%3E%3Crect width='32' height='32' rx='6' fill='%23a3402c'/%3E%3Ctext x='16' y='23' font-size='19' text-anchor='middle' fill='white' font-family='serif'%3E夏%3C/text%3E%3C/svg%3E">
+<link rel="stylesheet" href="/static/style.css">
+</head>
+<body>
+<header class="top">
+  <a class="brand" href="/">
+    <span class="seal">夏</span>
+    <span><b>西夏文 OCR</b><small>夏汉混排识别 · 一起校对</small></span>
+  </a>
+  <span class="spacer"></span>
+  <span class="pill" id="mine" hidden>你已校对 <b>0</b> 行</span>
+  <button class="ghost" id="aboutBtn">说明</button>
+</header>
+
+<main>
+  <!-- 首页 -->
+  <section class="home" id="home">
+    <h1>识别扫描页上的西夏文和汉字</h1>
+    <p class="lead">上传一页书或词典的扫描件、照片或 PDF，逐行读出西夏字、汉字、标点和注码。
+      看到读错的地方顺手改一下，改过的行会用来训练下一版模型。</p>
+
+    <label class="drop" id="drop">
+      <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.6" stroke-linecap="round" stroke-linejoin="round"><path d="M12 16V4m0 0-4 4m4-4 4 4"/><path d="M4 15v3a2 2 0 0 0 2 2h12a2 2 0 0 0 2-2v-3"/></svg>
+      <span class="big" id="dropTitle">把图片或 PDF 拖到这里，或点击选择</span>
+      <span class="small" id="dropSub">PNG / JPG / WebP / TIFF / PDF · 电脑上也可以直接粘贴截图（Ctrl+V）</span>
+      <span class="bar" id="upBar" hidden><i></i></span>
+      <input type="file" id="file" accept="image/*,.pdf,application/pdf" hidden>
+    </label>
+    <div class="home-actions">手边没有扫描件？<button class="link" id="sampleBtn">用示例页试试</button></div>
+
+    <ul class="tips">
+      <li><b>横排文字</b>按行识别，夏汉混排、注释、拟音都可以。竖排暂不支持。</li>
+      <li><b>清晰、端正</b>的扫描效果最好；手机拍照请尽量拍平、避免阴影。</li>
+      <li><b>整本 PDF 也可以</b>，翻到哪页识别哪页；文件大时上传会慢一些。上传的文件几天后自动删除。</li>
+    </ul>
+
+    <div class="community" id="community" hidden>
+      <span class="num" id="commLines">0</span>
+      <span>行校对已经由 <b id="commPeople">0</b> 位使用者提交。每一行都会让模型更准一点。</span>
+    </div>
+  </section>
+
+  <!-- 识别结果 -->
+  <section class="work" id="work" hidden>
+    <div class="toolbar">
+      <button class="ghost" id="newBtn">← 换一个文件</button>
+      <span class="docname" id="docName"></span>
+      <span class="pager" id="pager" hidden>
+        <button class="ghost icon-btn" id="prevPage" title="上一页">‹</button>
+        第 <input type="number" id="pageInput" min="1"> / <span id="pageCount"></span> 页
+        <button class="ghost icon-btn" id="nextPage" title="下一页">›</button>
+      </span>
+      <span class="spacer"></span>
+      <button class="ghost" id="copyBtn">复制全文</button>
+      <button class="ghost" id="txtBtn">下载 TXT</button>
+    </div>
+    <div class="panes">
+      <div class="viewer" id="viewer">
+        <div class="stage" id="stage">
+          <img id="pageImg" alt="">
+          <svg id="overlay" preserveAspectRatio="none"></svg>
+        </div>
+        <div class="zoom">
+          <button data-z="out" title="缩小">−</button>
+          <button data-z="fit" title="适应宽度">适应</button>
+          <button data-z="in" title="放大">＋</button>
+        </div>
+        <div class="busy" id="busy" hidden><div class="spinner"></div><div id="busyText">识别中…</div></div>
+      </div>
+      <div class="side">
+        <div class="side-head">
+          <b>识别结果</b><span id="lineCount"></span>
+          <span class="legend">点一行开始校对 · <i class="dot"></i> 没把握的字</span>
+        </div>
+        <ol class="lines" id="lines"></ol>
+      </div>
+    </div>
+  </section>
+</main>
+
+<!-- 校对面板 -->
+<section class="editor" id="editor" hidden>
+  <div class="ed-head">
+    <h3 id="edTitle">第 1 行</h3>
+    <span class="badge" id="edBadge" hidden></span>
+    <span class="spacer"></span>
+    <span class="hint hide-sm"><kbd>Enter</kbd> 提交 · <kbd>Alt</kbd>+<kbd>↑</kbd><kbd>↓</kbd> 换行 · <kbd>Esc</kbd> 关闭</span>
+    <button class="ghost icon-btn" id="edPrev" title="上一行">↑</button>
+    <button class="ghost icon-btn" id="edNext" title="下一行">↓</button>
+    <button class="ghost icon-btn" id="edClose" title="关闭">✕</button>
+  </div>
+  <div class="crop" id="crop"><canvas id="cropCanvas"></canvas></div>
+  <div class="field-label">逐字看：<span>点一个字可以换成候选字或删掉</span></div>
+  <div class="chips" id="chips"></div>
+  <div class="field-label"><span>这一行正确的文字</span></div>
+  <input class="line-input" id="lineInput" autocomplete="off" spellcheck="false">
+  <details class="lookup" id="lookup">
+    <summary>不会输入西夏字？按拟音或字义查</summary>
+    <div class="body">
+      <input id="lookupInput" placeholder="输入拟音（如 ljụ、lji）、汉义（如 身）、英文（body）或 U+17000">
+      <div class="lookup-grid" id="lookupResults"></div>
+    </div>
+  </details>
+  <div class="actions">
+    <button class="ghost danger" id="badBtn" title="检测框没框对，比如框住了半行、两行或图案">这里不是一行文字</button>
+    <span class="spacer"></span>
+    <button class="secondary" id="confirmBtn">✓ 识别没有错</button>
+    <button class="primary" id="submitBtn">提交修改</button>
+  </div>
+</section>
+
+<div class="popover" id="pop" hidden></div>
+
+<dialog id="consentDlg">
+  <form method="dialog" class="dlg">
+    <h2>提交之前</h2>
+    <p>你提交的内容——这一行的图片、模型原来的识别结果、你确认或改正后的文字——会保存在服务器上，经人工审核后用于训练下一版西夏文 OCR 模型。</p>
+    <p>上传的整页文件在服务器上保留 <span id="retention">72</span> 小时后自动删除，只留下你提交过的那几行。</p>
+    <label class="check"><input type="checkbox" id="consentChk"><span>我同意以上用途；我上传的材料可以这样使用（例如研究用途的少量书页）。</span></label>
+    <div class="field-label">署名（可选，用于致谢，可以留空）</div>
+    <input id="nameInput" maxlength="40" style="width:100%">
+    <div class="row">
+      <button class="ghost" value="cancel">取消</button>
+      <button class="primary" value="ok" id="consentOk" disabled>同意并提交</button>
+    </div>
+  </form>
+</dialog>
+
+<dialog id="aboutDlg">
+  <form method="dialog" class="dlg">
+    <h2>关于这个工具</h2>
+    <p>一个夏汉混排的整行识别模型：西夏字（Unicode 全部 5,878 个规范字）、约 8,400 个汉字、标点、注码和拟音字母放在同一个字表里一次读出，不需要先分字种。</p>
+    <div class="metrics" id="metrics"></div>
+    <p>以上是在测试书页上的成绩（测试页没有参与训练）。“汉字”一项以 PP-OCRv5 的高置信度结果为参照。</p>
+    <ul>
+      <li>只识别横排行；竖排文字会被标出来，暂不识别。</li>
+      <li>没有语言模型校正：一个字读错不会被上下文纠正，所以看到错字请顺手改掉。</li>
+      <li>你的校对先进入待审核队列，审核通过后才会用于训练。</li>
+    </ul>
+    <p style="font-size:12px">行检测：PaddleOCR PP-OCRv6（Apache-2.0）。西夏字体：Noto Serif Tangut（SIL OFL 1.1）。</p>
+    <div class="row"><button class="primary" value="ok">知道了</button></div>
+  </form>
+</dialog>
+
+<div class="toast" id="toast"></div>
+<script src="/static/app.js"></script>
+</body>
+</html>

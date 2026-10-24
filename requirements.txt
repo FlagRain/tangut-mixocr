@@ -1,0 +1,7 @@
+# 识别（ocr.py）与网站共用；不需要 PyTorch
+onnxruntime>=1.17,<2
+numpy>=1.26,<3
+opencv-python-headless>=4.9,<5
+pillow>=10.3,<13
+pymupdf>=1.24,<2
+pyclipper>=1.3,<2

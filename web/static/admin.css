@@ -1,0 +1,46 @@
+/* 审核页 */
+.login { max-width: 420px; margin: 80px auto; padding: 0 20px; }
+.login h1 { font-size: 24px; margin: 0 0 8px; }
+.login p { color: var(--muted); font-size: 14px; }
+.login form { display: flex; gap: 8px; margin-top: 16px; }
+.login input { flex: 1; }
+code { font-size: 13px; background: var(--surface-2); border: 1px solid var(--border); border-radius: 4px; padding: 0 4px; }
+
+.adm { max-width: 1100px; margin: 0 auto; padding: 18px 20px 60px; }
+.adm-bar { display: flex; gap: 10px; align-items: center; flex-wrap: wrap; }
+.adm-bar .spacer { flex: 1; }
+.tabs { display: inline-flex; background: var(--surface); border: 1px solid var(--border); border-radius: 9px; padding: 3px; }
+.tabs button { background: transparent; color: var(--muted); padding: 6px 14px; }
+.tabs button.on { background: var(--accent-soft); color: var(--accent); font-weight: 600; }
+select { font: inherit; color: var(--text); background: var(--surface); border: 1px solid var(--border-strong); border-radius: 8px; padding: 7px 10px; }
+.adm-help { color: var(--muted); font-size: 13px; margin: 10px 0 16px; }
+
+.cards { display: flex; flex-direction: column; gap: 12px; }
+.card {
+  background: var(--surface);
+  border: 1px solid var(--border);
+  border-radius: var(--radius);
+  padding: 14px 16px;
+  box-shadow: var(--shadow);
+  border-left: 4px solid var(--border-strong);
+}
+.card.cur { outline: 2px solid var(--accent); outline-offset: 1px; }
+.card.st-approved { border-left-color: var(--ok); }
+.card.st-rejected { border-left-color: var(--muted); opacity: .75; }
+.card.st-pending { border-left-color: var(--warn); }
+.card img { display: block; max-width: 100%; max-height: 110px; background: #fff; border: 1px solid var(--border); border-radius: 6px; margin-bottom: 10px; }
+.card .row { display: grid; grid-template-columns: 64px 1fr; gap: 8px; align-items: baseline; margin: 2px 0; }
+.card .k { color: var(--muted); font-size: 13px; }
+.card .v { font: 20px/1.5 var(--tx); word-break: break-all; }
+.card .v.empty { font: 13px var(--ui); color: var(--muted); }
+.card del { background: var(--accent-soft); color: var(--accent); text-decoration: line-through; text-decoration-thickness: 1px; }
+.card ins { background: var(--ok-soft); color: var(--ok); text-decoration: none; }
+.card .edit { display: flex; gap: 8px; margin-top: 6px; }
+.card .edit input { flex: 1; font: 20px/1.4 var(--tx); }
+.card .foot { display: flex; gap: 8px; align-items: center; margin-top: 10px; flex-wrap: wrap; }
+.card .meta { color: var(--muted); font-size: 12px; flex: 1; }
+.tag { font-size: 12px; padding: 1px 8px; border-radius: 999px; background: var(--surface-2); border: 1px solid var(--border); margin-right: 6px; }
+.tag.correct { background: var(--accent-soft); color: var(--accent); border-color: transparent; }
+.tag.confirm { background: var(--ok-soft); color: var(--ok); border-color: transparent; }
+.more { text-align: center; margin-top: 18px; color: var(--muted); font-size: 13px; }
+.more button { margin-right: 10px; }

@@ -1,0 +1,57 @@
+<!doctype html>
+<html lang="zh-CN">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<meta name="robots" content="noindex">
+<title>审核校对 · 西夏文 OCR</title>
+<link rel="stylesheet" href="/static/style.css">
+<link rel="stylesheet" href="/static/admin.css">
+</head>
+<body>
+<header class="top">
+  <a class="brand" href="/"><span class="seal">夏</span><span><b>西夏文 OCR</b><small>审核校对</small></span></a>
+  <span class="spacer"></span>
+  <span class="pill" id="statLine" hidden></span>
+  <button class="ghost" id="logoutBtn" hidden>退出</button>
+</header>
+
+<section class="login" id="login">
+  <h1>管理员登录</h1>
+  <p>输入部署时设置的管理口令（服务器上 <code>/etc/tangut-ocr.env</code> 里的 <code>TANGUT_OCR_ADMIN_TOKEN</code>）。</p>
+  <form id="loginForm">
+    <input type="password" id="tokenInput" placeholder="管理口令" autocomplete="current-password">
+    <button class="primary">进入</button>
+  </form>
+</section>
+
+<section class="adm" id="adm" hidden>
+  <div class="adm-bar">
+    <div class="tabs" id="tabs">
+      <button data-s="pending" class="on">待审核</button>
+      <button data-s="approved">已采用</button>
+      <button data-s="rejected">已拒绝</button>
+      <button data-s="all">全部</button>
+    </div>
+    <select id="actionSel">
+      <option value="all">所有类型</option>
+      <option value="correct">改正</option>
+      <option value="confirm">确认无误</option>
+      <option value="bad">框有问题</option>
+    </select>
+    <span class="spacer"></span>
+    <button class="ghost" id="bulkBtn">采用本页全部</button>
+    <button class="primary" id="exportBtn">导出已采用（训练用）</button>
+  </div>
+  <p class="adm-help">
+    <kbd>J</kbd>/<kbd>K</kbd> 上下移动，<kbd>A</kbd> 采用，<kbd>R</kbd> 拒绝，<kbd>E</kbd> 修改文字。
+    “确认无误”的行也是有效标签；“框有问题”的行不会导出。导出的压缩包可直接放进 <code>mixocr/data/real/</code> 训练。
+  </p>
+  <div class="cards" id="cards"></div>
+  <div class="more"><button class="ghost" id="moreBtn" hidden>加载更多</button><span id="countNote"></span></div>
+</section>
+
+<div class="toast" id="toast"></div>
+<script src="/static/admin.js"></script>
+</body>
+</html>

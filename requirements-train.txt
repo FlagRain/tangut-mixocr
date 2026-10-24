@@ -1,0 +1,8 @@
+# 训练、评测、导出（另需一块支持 CUDA 的显卡；PyTorch 请按 https://pytorch.org 选择与 CUDA 匹配的版本）
+-r requirements.txt
+torch>=2.3
+fonttools>=4.50
+onnx>=1.16
+pandas>=2.0
+matplotlib>=3.8
+brotli>=1.1
