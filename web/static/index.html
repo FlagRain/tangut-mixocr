@@ -3,32 +3,34 @@
 <head>
 <meta charset="utf-8">
 <meta name="viewport" content="width=device-width, initial-scale=1">
-<title>西夏文 OCR · 夏汉混排识别</title>
-<link rel="icon" href="data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 32 32'%3E%3Crect width='32' height='32' rx='6' fill='%23a3402c'/%3E%3Ctext x='16' y='23' font-size='19' text-anchor='middle' fill='white' font-family='serif'%3E夏%3C/text%3E%3C/svg%3E">
+<title>西夏文混排 OCR</title>
+<link rel="icon" href="data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 32 32'%3E%3Crect width='32' height='32' fill='%2318181c'/%3E%3Ctext x='16' y='23' font-size='19' text-anchor='middle' fill='white' font-family='serif'%3E夏%3C/text%3E%3C/svg%3E">
 <link rel="stylesheet" href="/static/style.css">
 </head>
 <body>
 <header class="top">
-  <a class="brand" href="/">
-    <span class="seal">夏</span>
-    <span><b>西夏文 OCR</b><small>夏汉混排识别 · 一起校对</small></span>
-  </a>
+  <a class="brand" href="/"><b>西夏文 OCR</b><small>夏汉混排识别</small></a>
   <span class="spacer"></span>
   <span class="pill" id="mine" hidden>你已校对 <b>0</b> 行</span>
+  <a class="gh" href="https://github.com/FlagRain/tangut-mixocr" target="_blank" rel="noopener" title="模型代码（GitHub）">
+    <svg viewBox="0 0 16 16" aria-hidden="true"><path fill="currentColor" d="M8 0C3.58 0 0 3.58 0 8c0 3.54 2.29 6.53 5.47 7.59.4.07.55-.17.55-.38 0-.19-.01-.82-.01-1.49-2.01.37-2.53-.49-2.69-.94-.09-.23-.48-.94-.82-1.13-.28-.15-.68-.52-.01-.53.63-.01 1.08.58 1.23.82.72 1.21 1.87.87 2.33.66.07-.52.28-.87.51-1.07-1.78-.2-3.64-.89-3.64-3.95 0-.87.31-1.59.82-2.15-.08-.2-.36-1.02.08-2.12 0 0 .67-.21 2.2.82.64-.18 1.32-.27 2-.27.68 0 1.36.09 2 .27 1.53-1.04 2.2-.82 2.2-.82.44 1.1.16 1.92.08 2.12.51.56.82 1.27.82 2.15 0 3.07-1.87 3.75-3.65 3.95.29.25.54.73.54 1.48 0 1.07-.01 1.93-.01 2.2 0 .21.15.46.55.38A8.013 8.013 0 0016 8c0-4.42-3.58-8-8-8z"/></svg>
+    <span class="hide-sm">GitHub</span>
+  </a>
   <button class="ghost" id="aboutBtn">说明</button>
 </header>
 
 <main>
   <!-- 首页 -->
   <section class="home" id="home">
+    <p class="eyebrow">Tangut OCR</p>
     <h1>识别扫描页上的西夏文和汉字</h1>
-    <p class="lead">上传一页书或词典的扫描件、照片或 PDF，逐行读出西夏字、汉字、标点和注码。
-      看到读错的地方顺手改一下，改过的行会用来训练下一版模型。</p>
+    <p class="lead">上传照片或 PDF，逐行识别字符。
+      看到识别错误的地方可以修改，您的修改会用来训练下一版模型。</p>
 
     <label class="drop" id="drop">
       <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.6" stroke-linecap="round" stroke-linejoin="round"><path d="M12 16V4m0 0-4 4m4-4 4 4"/><path d="M4 15v3a2 2 0 0 0 2 2h12a2 2 0 0 0 2-2v-3"/></svg>
       <span class="big" id="dropTitle">把图片或 PDF 拖到这里，或点击选择</span>
-      <span class="small" id="dropSub">PNG / JPG / WebP / TIFF / PDF · 电脑上也可以直接粘贴截图（Ctrl+V）</span>
+      <span class="small" id="dropSub">PNG / JPG / WebP / TIFF / PDF / 电脑直接粘贴截图（Ctrl+V）</span>
       <span class="bar" id="upBar" hidden><i></i></span>
       <input type="file" id="file" accept="image/*,.pdf,application/pdf" hidden>
     </label>
@@ -37,12 +39,12 @@
     <ul class="tips">
       <li><b>横排文字</b>按行识别，夏汉混排、注释、拟音都可以。竖排暂不支持。</li>
       <li><b>清晰、端正</b>的扫描效果最好；手机拍照请尽量拍平、避免阴影。</li>
-      <li><b>整本 PDF 也可以</b>，翻到哪页识别哪页；文件大时上传会慢一些。上传的文件几天后自动删除。</li>
+      <li><b>整本 PDF 也可以</b>，翻到哪页识别哪页。上传的文件几天后自动删除。</li>
     </ul>
 
     <div class="community" id="community" hidden>
       <span class="num" id="commLines">0</span>
-      <span>行校对已经由 <b id="commPeople">0</b> 位使用者提交。每一行都会让模型更准一点。</span>
+      <span>行校对已经由 <b id="commPeople">0</b> 位使用者提交。</span>
     </div>
   </section>
 
@@ -135,20 +137,23 @@
 <dialog id="aboutDlg">
   <form method="dialog" class="dlg">
     <h2>关于这个工具</h2>
-    <p>一个夏汉混排的整行识别模型：西夏字（Unicode 全部 5,878 个规范字）、约 8,400 个汉字、标点、注码和拟音字母放在同一个字表里一次读出，不需要先分字种。</p>
+    <p>一个夏汉混排的整行识别模型：西夏文（Unicode 全部 5,878 个规范字）、约 8,400 个汉字、标点、拟音字母放在同一个字表里一次读出，不需要先分字种。</p>
     <div class="metrics" id="metrics"></div>
-    <p>以上是在测试书页上的成绩（测试页没有参与训练）。“汉字”一项以 PP-OCRv5 的高置信度结果为参照。</p>
+    <p>以上是在测试书页上的成绩。</p>
     <ul>
       <li>只识别横排行；竖排文字会被标出来，暂不识别。</li>
       <li>没有语言模型校正：一个字读错不会被上下文纠正，所以看到错字请顺手改掉。</li>
       <li>你的校对先进入待审核队列，审核通过后才会用于训练。</li>
     </ul>
+    <p>模型和训练代码在 GitHub：<a href="https://github.com/FlagRain/tangut-mixocr" target="_blank" rel="noopener">FlagRain/tangut-mixocr</a></p>
     <p style="font-size:12px">行检测：PaddleOCR PP-OCRv6（Apache-2.0）。西夏字体：Noto Serif Tangut（SIL OFL 1.1）。</p>
-    <div class="row"><button class="primary" value="ok">知道了</button></div>
+    <div class="row"><button class="primary" value="ok" autofocus>知道了</button></div>
   </form>
 </dialog>
 
 <div class="toast" id="toast"></div>
 <script src="/static/app.js"></script>
+<script>/* 只在本机打开时加载调样式面板，线上访客不会加载 */
+if (/^(localhost|127\.0\.0\.1|\[::1\])$/.test(location.hostname)) document.body.append(Object.assign(document.createElement("script"), { src: "/static/tune.js" }));</script>
 </body>
 </html>
